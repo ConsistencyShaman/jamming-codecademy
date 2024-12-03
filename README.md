@@ -1,3 +1,7 @@
+# API credentials
+
+You need to create a .env file if you want to use this app with your spotify API credentials
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
