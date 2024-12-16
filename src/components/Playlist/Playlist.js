@@ -1,11 +1,13 @@
 
 export function Playlist() {
-
+    
     return (
         <div className="playlist">
-            <li>
-                
-            </li>
+            <ul>
+                <li>
+                    <p>Music</p>
+                </li>
+            </ul>
         </div>
     )
 }

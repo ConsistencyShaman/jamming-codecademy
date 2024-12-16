@@ -1,16 +1,10 @@
-import React, { useEffect } from 'react';
-import { spotifyAuthCodeFlow } from '../../auth/script';
 
-export function Welcome() {
-
-    const handleLogin = () => {
-        window.Location.href = spotifyAuthCodeFlow();
-    }
+export function Welcome({ handleLogin }) {
 
     return (
-        <div>
+        <div className='welcomePage'>
             <h1>Music Everywhere!</h1>
-            <button onClick={handleLogin}>Login with Spotify</button>
+            <button onClick={() => handleLogin()}>Login with Spotify</button>
         </div>
     )
 }

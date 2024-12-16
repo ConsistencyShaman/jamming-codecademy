@@ -1,32 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { getAccessToken, fetchProfile, populateUI } from '../../auth/script';
-import { useNavigate } from 'react-router-dom';
+import { Nav } from '../App/Nav';
+import { SearchBar } from '../SearchBar/SearchBar';
 
-export function Login() {
-    const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
+import { Playlist } from '../Playlist/Playlist';
+import { Tracklist } from '../Tracklist/Tracklist';
+import { SearchResults } from '../SearchResults/SearchResults';
+import { Profile } from '../Profile/Profile';
 
-    const getProfileData =  async () => {
-        const access_token = await getAccessToken();
+import { Route, Routes, useHistory } from 'react-router-dom';
 
-        if (!access_token) {
-            throw new Error("Getting token went wrong...");
-        }
-
-        try {
-            const profileData = await fetchProfile(access_token);
-            setProfile(profileData);
-            populateUI(profile);
-        } catch (error) {
-            console.log("Error fetching profile", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        getProfileData();
-    }, []);
+export function Login({ loading }) {
 
     if (loading) {
         return (
@@ -37,19 +19,18 @@ export function Login() {
     }
 
     return (
-        <div>
-            <section id="profile">
-                <h2>Logged in as <span id="displayName"></span></h2>
-                <img id="avatar" width="200" src="#" />
-                <ul>
-                    <li>User ID: <span id="id"></span></li>
-                    <li>Email: <span id="email"></span></li>
-                    <li>Spotify URI: <a id="uri" href="#"></a></li>
-                    <li>Link: <a id="url" href="#"></a></li>
-                    <li>Profile Image: <span id="imgUrl"></span></li>
-                </ul>
-            </section>
-        </div>
+        <>
+            <Nav />
+            <SearchBar />
+            <Routes>
+                <Route path='/user/profile' element={<Profile
+                    loading={loading} />
+                } />
+                <Route path='/user/playlist' element={<Playlist />} />
+                <Route path='/user/search-results' element={<SearchResults />} />
+                <Route path='/user/tracklist' element={<Tracklist />} />
+            </Routes>
+        </>
     )
 }
 

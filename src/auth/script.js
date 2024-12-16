@@ -1,6 +1,6 @@
 const client_id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const redirect_uri = "http://localhost:3000/user"
 const scope = 'user-read-private user-read-email';
-const redirect_uri = "http://localhost:3000/login"
 
 const base_url = "https://api.spotify.com/v1";
 
@@ -41,16 +41,13 @@ export async function spotifyAuthCodeFlow() {
     });
 
     document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+
 }
 
-// Parse the code after authO
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
-
 // Get access token
-export async function getAccessToken() {
+export async function getAccessToken(code) {
     const verifier = localStorage.getItem("verifier");
-    
+
     // if (!verifier) {throw new Error("Verifier WRONG!")};
     const params = new URLSearchParams({
         client_id: client_id,
@@ -61,14 +58,15 @@ export async function getAccessToken() {
 
     });
 
-    const result = await fetch("https://accounts.spotify.com/api/token", {
+    const response = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded"},
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params,
     });
 
-    const  access_token  = await result.json();
-    if (!access_token) { throw new Error("Access Token FALSE!")};
+    const access_token = await response.json();
+    if (!access_token) { throw new Error("Access Token FALSE!") };
+    
     return access_token;
 }
 
@@ -81,6 +79,15 @@ export async function fetchProfile(token) {
     const profileData = await result.json();
     return profileData;
 }
+
+
+
+
+
+// Parse the code after authO
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
 
 // Populate UI, maybe show profile with loading smbol
 export function populateUI(profile) {
@@ -102,11 +109,11 @@ export function populateUI(profile) {
 
 // Redirect client to auth
 export async function callback() {
-    
-        const accessToken = await getAccessToken(client_id, code);
-        const profile = await fetchProfile(accessToken);
-        return populateUI(profile);
-    
+
+    const accessToken = await getAccessToken(client_id, code);
+    const profile = await fetchProfile(accessToken);
+    return populateUI(profile);
+
 }
 
 // Refresh Token
